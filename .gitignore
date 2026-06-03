@@ -60,6 +60,17 @@ Thumbs.db
 __pycache__/
 *.pyc
 
+# Device configs (contains IP/user/password)
+**/Device.ini
+
+# SDK logs
+**/HCNetSDK_Log_Switch.xml
+
+# Binary executables
+**/getpsdata
+**/sdkTest
+**/QtClientDemo
+
 # Misc
 *.txt
 *.md
