@@ -1,0 +1,66 @@
+// Shared model structs used by both the main window and the bottom
+// log/alarm panel. Defining them here avoids a circular import
+// (main.slint ↔ log_alarm_panel.slint).
+
+export struct DeviceNode {
+    depth: int,
+    label: string,
+    online: bool,
+    device_index: int,
+    channel_index: int,
+    is_channel: bool,
+    is_root: bool,
+}
+
+export struct LogRow {
+    time: string,
+    interface: string,
+    device_ip: string,
+    info: string,
+    success: bool,
+}
+
+export struct AlarmRow {
+    time: string,
+    alarm_type: string,
+    device: string,
+    info: string,
+}
+
+// Form payload bubbled up from the AddNodeDialog.
+export struct AddNodeForm {
+    node_name: string,
+    ip: string,
+    port: string,
+    username: string,
+    password: string,
+    secret_key: string,
+    use_ip_server: bool,
+    ip_server_addr: string,
+    ip_server_port: string,
+    device_name_field: string,
+    device_serial: string,
+}
+
+// Form payload bubbled up from the DeviceAttrDialog.
+export struct DeviceAttrForm {
+    device_name: string,
+    ip: string,
+    port: string,
+    user_id: string,
+    serial: string,
+    chan_count: string,
+    ip_chan_count: string,
+    zero_chan: string,
+    status: string,
+}
+
+// Form payload bubbled up from the ChannelAttrDialog.
+export struct ChannelAttrForm {
+    channel_name: string,
+    channel_num: string,
+    protocol: string,
+    stream: string,
+    real_handle: string,
+    online: string,
+}

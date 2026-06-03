@@ -1,0 +1,66 @@
+# Build / binary artifacts
+**/build/
+**/debug/
+**/release/
+**/target/
+**/bin/
+**/*.o
+**/*.obj
+**/*.exe
+**/*.dll
+**/*.so
+**/*.a
+**/*.lib
+**/*.dylib
+**/*.out
+**/*.app
+**/*.class
+**/*.jar
+**/*.war
+**/*.dex
+**/lib/*.so
+**/lib/*.a
+**/Linux64/*.so
+**/Linux64/*.a
+**/win32/*.dll
+**/win32/*.lib
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+.qwen/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+**/sdkLog/
+*.log
+
+# Rust
+**/Cargo.lock
+
+# Qt
+**/moc_*.cpp
+**/moc_*.h
+**/qrc_*.cpp
+**/ui_*.h
+**/Makefile
+**/*.pro.user
+**/.qmake.stash
+
+# Python
+__pycache__/
+*.pyc
+
+# Misc
+*.txt
+*.md
+session-*.md

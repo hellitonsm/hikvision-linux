@@ -1,0 +1,69 @@
+// AddNode dialog. Mirrors src/MainWindow/DeviceTree/AddNode/addnode.ui
+
+import { Button, VerticalBox, HorizontalBox, LineEdit, CheckBox, GroupBox, ScrollView } from "std-widgets.slint";
+import { AddNodeForm } from "app_state.slint";
+
+export component AddNodeDialog inherits Window {
+    title: "Add device";
+    width: 560px;
+    height: 500px;
+
+    in-out property <string> node_name: "";
+    in-out property <string> ip: "";
+    in-out property <string> port: "8000";
+    in-out property <string> username: "admin";
+    in-out property <string> password: "";
+    in-out property <string> secret_key: "";
+    in-out property <bool> use_ip_server: false;
+    in-out property <string> ip_server_addr: "";
+    in-out property <string> ip_server_port: "7070";
+    in-out property <string> device_name_field: "";
+    in-out property <string> device_serial: "";
+
+    callback ok();
+    callback cancel();
+    callback get_ip();
+    callback form_changed(AddNodeForm);
+
+    VerticalBox {
+        padding: 6px;
+        spacing: 4px;
+        height: 100%;
+
+        ScrollView {
+            VerticalBox {
+                spacing: 4px;
+
+                GroupBox {
+                    title: "Connection";
+                    VerticalBox {
+                        spacing: 3px;
+                        padding: 4px;
+                        HorizontalBox { spacing: 4px; Text { text: "Node name"; width: 100px; } LineEdit { text: node_name; placeholder-text: "Friendly name"; edited(n) => { node_name = n; } } }
+                        HorizontalBox { spacing: 4px; Text { text: "Device IP *"; width: 100px; } LineEdit { text: ip; edited(v) => { ip = v; } } }
+                        HorizontalBox { spacing: 4px; Text { text: "Port"; width: 100px; } LineEdit { text: port; edited(v) => { port = v; } } }
+                        HorizontalBox { spacing: 4px; Text { text: "Username"; width: 100px; } LineEdit { text: username; edited(v) => { username = v; } } }
+                        HorizontalBox { spacing: 4px; Text { text: "Password"; width: 100px; } LineEdit { text: password; placeholder-text: "(optional)"; edited(p) => { password = p; } } }
+                        HorizontalBox { spacing: 4px; Text { text: "Encryption key"; width: 100px; } LineEdit { text: secret_key; placeholder-text: "16 chars max"; edited(v) => { secret_key = v; } } }
+                    }
+                }
+
+                GroupBox {
+                    title: "IP server";
+                    VerticalBox {
+                        spacing: 3px;
+                        padding: 4px;
+                        HorizontalBox { spacing: 4px; CheckBox { text: "Get device IP from IP server"; checked: use_ip_server; toggled => { use_ip_server = !use_ip_server; } } Button { text: "Get IP address"; clicked => { get_ip(); } } }
+                        HorizontalBox { spacing: 4px; Text { text: "IP server addr"; width: 120px; } LineEdit { text: ip_server_addr; } Text { text: "Port"; width: 40px; } LineEdit { text: ip_server_port; } }
+                        HorizontalBox { spacing: 4px; Text { text: "Device name"; width: 120px; } LineEdit { text: device_name_field; } Text { text: "Serial"; width: 40px; } LineEdit { text: device_serial; } }
+                    }
+                }
+            }
+        }
+
+        HorizontalBox { alignment: end; spacing: 8px;
+            Button { text: "Cancel"; clicked => { cancel(); } }
+            Button { text: "OK";  clicked => { ok(); } }
+        }
+    }
+}

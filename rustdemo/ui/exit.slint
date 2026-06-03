@@ -1,0 +1,14 @@
+// Exit dialog.
+import { Button, VerticalBox, HorizontalBox } from "std-widgets.slint";
+
+export component ExitDialog inherits Window {
+    title: "Exit"; width: 360px; height: 140px;
+    callback confirm(); callback cancel();
+    VerticalBox { padding: 12px;
+        Text { text: "Are you sure you want to exit?"; }
+        HorizontalBox { alignment: end; spacing: 8px;
+            Button { text: "OK"; clicked => { confirm(); } }
+            Button { text: "Cancel"; clicked => { cancel(); } }
+        }
+    }
+}

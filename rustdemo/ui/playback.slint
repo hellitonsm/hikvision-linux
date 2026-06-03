@@ -1,0 +1,19 @@
+// Playback page.
+import { Button, VerticalBox, HorizontalBox, LineEdit, GroupBox, ComboBox } from "std-widgets.slint";
+
+export component PlayBackPage inherits Rectangle {
+    in-out property <string> start_time: "2024-01-01 00:00:00";
+    in-out property <string> end_time: "2024-12-31 23:59:59";
+    callback search(); callback download(); callback play();
+    VerticalLayout { padding: 8px;
+        Rectangle { background: #1a1a1a; height: 320px; Text { text: "Playback canvas"; color: #ccc; horizontal-alignment: center; vertical-alignment: center; } }
+        GroupBox { title: "Search";
+            VerticalBox { spacing: 4px;
+                HorizontalBox { spacing: 4px; Text { text: "Start time"; width: 100px; } LineEdit { text: start_time; } }
+                HorizontalBox { spacing: 4px; Text { text: "End time"; width: 100px; } LineEdit { text: end_time; } }
+                HorizontalBox { spacing: 4px; Text { text: "Stream"; width: 100px; } ComboBox { model: ["Main", "Sub"]; } }
+            }
+        }
+        HorizontalLayout { spacing: 8px; Button { text: "Search files"; clicked => { search(); } } Button { text: "Download"; clicked => { download(); } } Button { text: "Play by time"; clicked => { play(); } } }
+    }
+}

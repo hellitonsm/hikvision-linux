@@ -1,0 +1,19 @@
+// Other page.
+import { VerticalBox, HorizontalBox, GroupBox, Button } from "std-widgets.slint";
+
+export component OtherPage inherits Rectangle {
+    callback open_deploy(); callback open_devicepan(); callback open_import();
+    callback open_serial(); callback open_broadcast(); callback open_intercom();
+    callback open_transfer();
+
+    VerticalLayout { padding: 12px; spacing: 12px;
+        GroupBox { title: "Other actions";
+            VerticalBox { spacing: 4px;
+                HorizontalBox { spacing: 8px; Button { text: "Arming / disarm"; clicked => { open_deploy(); } } Button { text: "Device panel"; clicked => { open_devicepan(); } } }
+                HorizontalBox { spacing: 8px; Button { text: "Import / export"; clicked => { open_import(); } } Button { text: "Serial channel"; clicked => { open_serial(); } } }
+                HorizontalBox { spacing: 8px; Button { text: "Audio broadcast"; clicked => { open_broadcast(); } } Button { text: "Audio intercom"; clicked => { open_intercom(); } } }
+                HorizontalBox { spacing: 8px; Button { text: "Audio transfer"; clicked => { open_transfer(); } } }
+            }
+        }
+    }
+}

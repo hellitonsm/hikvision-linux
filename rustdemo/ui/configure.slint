@@ -1,0 +1,54 @@
+// Configure page — tabs.
+import { TabWidget, VerticalBox, HorizontalBox, LineEdit, GroupBox, Button, CheckBox, ComboBox } from "std-widgets.slint";
+
+export component ConfigurePage inherits Rectangle {
+    TabWidget {
+        Tab { title: "Network"; VerticalBox {
+            GroupBox { title: "Ethernet";
+                VerticalBox { spacing: 4px;
+                    HorizontalBox { spacing: 4px; Text { text: "DHCP"; width: 120px; } CheckBox { text: "Enable"; } }
+                    HorizontalBox { spacing: 4px; Text { text: "IP address"; width: 120px; } LineEdit { text: "192.168.1.100"; } }
+                    HorizontalBox { spacing: 4px; Text { text: "Subnet mask"; width: 120px; } LineEdit { text: "255.255.255.0"; } }
+                    HorizontalBox { spacing: 4px; Text { text: "Gateway"; width: 120px; } LineEdit { text: "192.168.1.1"; } }
+                }
+            }
+            GroupBox { title: "Ports";
+                VerticalBox { spacing: 4px;
+                    HorizontalBox { spacing: 4px; Text { text: "Command port"; width: 120px; } LineEdit { text: "8000"; } }
+                    HorizontalBox { spacing: 4px; Text { text: "HTTP port"; width: 120px; } LineEdit { text: "80"; } }
+                    HorizontalBox { spacing: 4px; Text { text: "RTSP port"; width: 120px; } LineEdit { text: "554"; } }
+                }
+            }
+        } }
+        Tab { title: "Channel"; GroupBox { title: "OSD";
+            VerticalBox { spacing: 4px;
+                HorizontalBox { spacing: 4px; Text { text: "Channel name"; width: 140px; } LineEdit { } }
+                HorizontalBox { spacing: 4px; Text { text: "Show time"; width: 140px; } CheckBox { text: "Yes"; } }
+                HorizontalBox { spacing: 4px; Text { text: "Resolution"; width: 140px; } ComboBox { model: ["1920x1080", "1280x720", "704x576"]; } }
+            }
+        } }
+        Tab { title: "User"; GroupBox { title: "Users";
+            VerticalBox { spacing: 4px;
+                HorizontalBox { spacing: 4px; Text { text: "admin password"; width: 140px; } LineEdit { text: "********"; } }
+                HorizontalBox { spacing: 4px; Text { text: "Add user"; width: 140px; } Button { text: "Add..."; } }
+            }
+        } }
+        Tab { title: "Exception"; GroupBox { title: "Exception type";
+            VerticalBox { spacing: 4px;
+                HorizontalBox { spacing: 4px; Text { text: "HDD full"; width: 140px; } ComboBox { model: ["None", "Beep", "Email"]; } }
+                HorizontalBox { spacing: 4px; Text { text: "Net disconnect"; width: 140px; } ComboBox { model: ["None", "Beep", "Email"]; } }
+            }
+        } }
+        Tab { title: "Serial"; GroupBox { title: "RS-485";
+            VerticalBox { spacing: 4px;
+                HorizontalBox { spacing: 4px; Text { text: "Baud rate"; width: 140px; } ComboBox { model: ["1200","2400","4800","9600","19200"]; } }
+                HorizontalBox { spacing: 4px; Text { text: "Data bits"; width: 140px; } ComboBox { model: ["5","6","7","8"]; } }
+            }
+        } }
+        Tab { title: "Alarm"; GroupBox { title: "Alarm input"; Text { text: "Placeholder"; } } }
+        Tab { title: "ATM"; GroupBox { title: "ATM"; Text { text: "ATM placeholder"; } } }
+        Tab { title: "IP"; GroupBox { title: "IP channel"; Text { text: "IP placeholder"; } } }
+        Tab { title: "Hard disk"; GroupBox { title: "HDD"; Text { text: "Disk placeholder"; } } }
+        Tab { title: "Public"; GroupBox { title: "Public"; Text { text: "Public placeholder"; } } }
+    }
+}

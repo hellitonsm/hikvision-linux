@@ -1,0 +1,32 @@
+// Channel property dialog.
+import { Button, VerticalBox, HorizontalBox, LineEdit, GroupBox } from "std-widgets.slint";
+
+export component ChannelAttrDialog inherits Window {
+    title: "Channel properties";
+    width: 480px;
+    height: 240px;
+    in-out property <string> channel_name: "";
+    in-out property <string> channel_num: "";
+    in-out property <string> protocol: "TCP";
+    in-out property <string> stream: "Main stream";
+    in-out property <string> real_handle: "-1";
+    in-out property <string> online: "no";
+    callback close();
+
+    VerticalBox {
+        padding: 8px;
+        GroupBox {
+            title: "Channel";
+            VerticalBox {
+                spacing: 4px;
+                HorizontalBox { spacing: 4px; Text { text: "Channel name"; width: 140px; } LineEdit { text: channel_name; read-only: true; } }
+                HorizontalBox { spacing: 4px; Text { text: "Channel number"; width: 140px; } LineEdit { text: channel_num; read-only: true; } }
+                HorizontalBox { spacing: 4px; Text { text: "Protocol"; width: 140px; } LineEdit { text: protocol; read-only: true; } }
+                HorizontalBox { spacing: 4px; Text { text: "Stream"; width: 140px; } LineEdit { text: stream; read-only: true; } }
+                HorizontalBox { spacing: 4px; Text { text: "Real-play handle"; width: 140px; } LineEdit { text: real_handle; read-only: true; } }
+                HorizontalBox { spacing: 4px; Text { text: "Online"; width: 140px; } LineEdit { text: online; read-only: true; } }
+            }
+        }
+        HorizontalBox { alignment: end; Button { text: "Close"; clicked => { close(); } } }
+    }
+}

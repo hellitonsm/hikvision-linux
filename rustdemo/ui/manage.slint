@@ -1,0 +1,19 @@
+// Manage page.
+import { VerticalBox, HorizontalBox, GroupBox, Button } from "std-widgets.slint";
+
+export component ManagePage inherits Rectangle {
+    callback open_timing(); callback open_update(); callback open_format();
+    callback open_reboot(); callback open_shutdown(); callback open_log_search();
+    callback open_device_state(); callback open_reset();
+
+    VerticalLayout { padding: 12px; spacing: 12px;
+        GroupBox { title: "Device actions";
+            VerticalBox { spacing: 4px;
+                HorizontalBox { spacing: 8px; Button { text: "Remote timing"; clicked => { open_timing(); } } Button { text: "Remote update"; clicked => { open_update(); } } }
+                HorizontalBox { spacing: 8px; Button { text: "Format disk"; clicked => { open_format(); } } Button { text: "Reboot"; clicked => { open_reboot(); } } }
+                HorizontalBox { spacing: 8px; Button { text: "Shutdown"; clicked => { open_shutdown(); } } Button { text: "Log search"; clicked => { open_log_search(); } } }
+                HorizontalBox { spacing: 8px; Button { text: "Device state"; clicked => { open_device_state(); } } Button { text: "Restore defaults"; clicked => { open_reset(); } } }
+            }
+        }
+    }
+}

@@ -1,0 +1,68 @@
+// Preview page — central canvas + transport controls.
+import { Button, VerticalBox, HorizontalBox, ComboBox, SpinBox, GroupBox, CheckBox } from "std-widgets.slint";
+
+export component RealPlayPage inherits Rectangle {
+    in-out property <int> channel: 1;
+    in-out property <string> stream: "Main stream";
+    in-out property <string> protocol: "TCP";
+    in-out property <bool> playing: false;
+    in-out property <image> frame;  // latest decoded frame
+
+    callback start(int, string, string);
+    callback stop();
+    callback snapshot();
+    callback ptz(int);
+
+    VerticalLayout {
+        padding: 8px; spacing: 6px;
+
+        // Preview canvas: black rectangle that displays the latest
+        // decoded frame, or a placeholder when no frame is available.
+        Rectangle {
+            background: #1a1a1a; border-color: #333; border-width: 1px; height: 320px;
+            if frame.width > 0 && frame.height > 0: Image {
+                source: frame;
+                width: 100%;
+                height: 100%;
+                image-fit: contain;
+            }
+            if frame.width == 0 || frame.height == 0: Text {
+                text: playing ? "Video playing in external window" : "Click 'Start preview' to open the video window";
+                color: #ccc; horizontal-alignment: center; vertical-alignment: center; font-size: 14px;
+            }
+        }
+
+        HorizontalLayout { spacing: 8px;
+            GroupBox { title: "Channel";
+                VerticalBox { spacing: 4px;
+                    HorizontalBox { spacing: 4px; Text { text: "Channel"; width: 80px; } SpinBox { value: channel; minimum: 0; maximum: 255; edited(v) => { channel = v; } } }
+                    HorizontalBox { spacing: 4px; Text { text: "Stream"; width: 80px; } ComboBox { model: ["Main stream", "Sub stream", "Third stream", "Trans code", "Fourth stream"]; current-value: stream; selected(s) => { stream = s; } } }
+                    HorizontalBox { spacing: 4px; Text { text: "Protocol"; width: 80px; } ComboBox { model: ["TCP", "UDP", "MULTICAST", "RTP", "RTSP", "HTTPS"]; current-value: protocol; selected(s) => { protocol = s; } } }
+                }
+            }
+            GroupBox { title: "Transport";
+                VerticalBox { spacing: 4px;
+                    Button {
+                        text: playing ? "Stop" : "Start preview";
+                        clicked => { if playing { stop(); } else { start(channel, stream, protocol); } }
+                    }
+                    Button { text: "Snapshot (JPEG)"; clicked => { snapshot(); } }
+                }
+            }
+        }
+
+        GroupBox { title: "PTZ";
+            HorizontalLayout { spacing: 4px;
+                Button { text: "Up"; clicked => { ptz(0); } }
+                Button { text: "Zoom +"; clicked => { ptz(1); } }
+                Button { text: "Left"; clicked => { ptz(2); } }
+                Button { text: "Center"; clicked => { ptz(3); } }
+                Button { text: "Right"; clicked => { ptz(4); } }
+                Button { text: "Zoom -"; clicked => { ptz(5); } }
+                Button { text: "Down"; clicked => { ptz(6); } }
+                Button { text: "Focus +"; clicked => { ptz(7); } }
+                Button { text: "Iris +"; clicked => { ptz(8); } }
+            }
+        }
+    }
+}

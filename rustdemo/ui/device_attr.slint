@@ -1,0 +1,45 @@
+// Device property dialog.
+import { Button, VerticalBox, HorizontalBox, LineEdit, GroupBox } from "std-widgets.slint";
+
+export component DeviceAttrDialog inherits Window {
+    title: "Device properties";
+    width: 480px;
+    height: 360px;
+    in-out property <string> device_name: "";
+    in-out property <string> ip: "";
+    in-out property <string> port: "";
+    in-out property <string> user_id: "-1";
+    in-out property <string> serial: "";
+    in-out property <string> chan_count: "0";
+    in-out property <string> ip_chan_count: "0";
+    in-out property <string> zero_chan: "0";
+    in-out property <string> status: "offline";
+    callback close();
+
+    VerticalBox {
+        padding: 8px;
+        spacing: 8px;
+        GroupBox {
+            title: "Identity";
+            VerticalBox {
+                spacing: 4px;
+                HorizontalBox { spacing: 4px; Text { text: "Device name"; width: 130px; } LineEdit { text: device_name; read-only: true; } }
+                HorizontalBox { spacing: 4px; Text { text: "IP"; width: 130px; } LineEdit { text: ip; read-only: true; } }
+                HorizontalBox { spacing: 4px; Text { text: "Port"; width: 130px; } LineEdit { text: port; read-only: true; } }
+                HorizontalBox { spacing: 4px; Text { text: "User ID"; width: 130px; } LineEdit { text: user_id; read-only: true; } }
+                HorizontalBox { spacing: 4px; Text { text: "Serial"; width: 130px; } LineEdit { text: serial; read-only: true; } }
+            }
+        }
+        GroupBox {
+            title: "Capabilities";
+            VerticalBox {
+                spacing: 4px;
+                HorizontalBox { spacing: 4px; Text { text: "Analog channels"; width: 130px; } LineEdit { text: chan_count; read-only: true; } }
+                HorizontalBox { spacing: 4px; Text { text: "IP channels"; width: 130px; } LineEdit { text: ip_chan_count; read-only: true; } }
+                HorizontalBox { spacing: 4px; Text { text: "Zero channel"; width: 130px; } LineEdit { text: zero_chan; read-only: true; } }
+                HorizontalBox { spacing: 4px; Text { text: "Status"; width: 130px; } LineEdit { text: status; read-only: true; } }
+            }
+        }
+        HorizontalBox { alignment: end; Button { text: "Close"; clicked => { close(); } } }
+    }
+}

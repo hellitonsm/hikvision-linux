@@ -1,0 +1,159 @@
+// Main window for the HCNetSDK Rust demo.
+
+import { Button, VerticalBox, HorizontalBox, LineEdit, ScrollView, ListView, TabWidget, GroupBox, CheckBox, ComboBox, SpinBox } from "std-widgets.slint";
+
+import { AddNodeDialog } from "add_node.slint";
+import { DeviceAttrDialog } from "device_attr.slint";
+import { ChannelAttrDialog } from "channel_attr.slint";
+import { LogAlarmPanel } from "log_alarm_panel.slint";
+import { RealPlayPage } from "realplay.slint";
+import { PlayBackPage } from "playback.slint";
+import { ConfigurePage } from "configure.slint";
+import { ManagePage } from "manage.slint";
+import { OtherPage } from "other.slint";
+import { ExitDialog } from "exit.slint";
+import { DeviceNode, LogRow, AlarmRow, AddNodeForm, DeviceAttrForm, ChannelAttrForm } from "app_state.slint";
+
+export { AddNodeDialog } from "add_node.slint";
+export { DeviceAttrDialog } from "device_attr.slint";
+export { ChannelAttrDialog } from "channel_attr.slint";
+export { ExitDialog } from "exit.slint";
+
+export global AppState {
+    in-out property <[DeviceNode]> tree_rows: [];
+    in-out property <[LogRow]> logs: [];
+    in-out property <[AlarmRow]> alarms: [];
+    in-out property <int> current_page: 1;
+    in-out property <string> sdk_version: "HCNetSDK (loading)";
+    in-out property <string> player_version: "PlayCtrl (loading)";
+    in-out property <string> status_text: "Ready";
+    in-out property <int> current_user_id: -1;
+    in-out property <int> current_channel: 1;
+    in-out property <string> current_device_ip: "";
+    in-out property <int> selected_tree_row: -1;
+    in-out property <int> selected_level: -1;
+    in-out property <int> selected_device_index: -1;
+    in-out property <int> selected_channel_index: -1;
+    in-out property <bool> busy: false;
+    // Action flags (set by UI buttons, consumed by Rust timer)
+    in-out property <bool> action_add_device: false;
+    in-out property <bool> action_login: false;
+    in-out property <bool> action_logout: false;
+    in-out property <bool> action_delete: false;
+    in-out property <bool> action_device_attr: false;
+    in-out property <bool> action_channel_attr: false;
+    in-out property <image> preview_frame;
+    in-out property <bool> preview_active: false;
+    in-out property <int> preview_channel: 1;
+}
+
+export component MainWindow inherits Window {
+    title: "HCNetSDK Rust Demo";
+    width: 1049px;
+    height: 877px;
+
+    callback tree_clicked(int);
+    callback tree_double_clicked(int);
+    callback exit_clicked();
+    callback clear_logs();
+    callback save_logs();
+    callback test_event();
+    callback realplay_start(int, string, string);
+    callback realplay_stop();
+    callback realplay_snapshot();
+    callback ptz(int);
+
+    VerticalLayout {
+        padding: 0px;
+        spacing: 0px;
+
+        // Top bar
+        HorizontalLayout {
+            height: 60px;
+            padding: 8px;
+            spacing: 4px;
+            alignment: start;
+            Text { text: AppState.sdk_version; font-size: 11px; vertical-alignment: center; width: 130px; }
+            Text { text: AppState.player_version; font-size: 11px; vertical-alignment: center; width: 130px; }
+            Button { text: "Configure"; width: 91px; height: 41px; clicked => { AppState.current_page = 3; } }
+            Button { text: "Preview"; width: 91px; height: 41px; clicked => { AppState.current_page = 1; } }
+            Button { text: "Playback"; width: 91px; height: 41px; clicked => { AppState.current_page = 2; } }
+            Button { text: "Manage"; width: 91px; height: 41px; clicked => { AppState.current_page = 4; } }
+            Button { text: "Other"; width: 91px; height: 41px; clicked => { AppState.current_page = 5; } }
+            Button { text: "Exit"; width: 91px; height: 41px; clicked => { root.exit_clicked(); } }
+            Text { width: 110px; text: AppState.status_text; vertical-alignment: center; horizontal-alignment: center; font-size: 12px; }
+        }
+
+        // Middle
+        HorizontalLayout {
+            padding: 0px;
+            spacing: 0px;
+
+            // Left panel: tree + action buttons
+            Rectangle {
+                width: 180px;
+                background: #f7f7f7;
+                border-color: #d0d0d0;
+                border-width: 1px;
+                VerticalLayout {
+                    padding: 4px;
+                    spacing: 4px;
+                    Text { text: "Device tree"; font-weight: 700; }
+                    ScrollView {
+                        ListView {
+                            for row[idx] in AppState.tree_rows: Rectangle {
+                                height: 24px;
+                                background: idx == AppState.selected_tree_row ? #d0e4ff : (row.is_root ? #e8e8e8 : transparent);
+                                HorizontalLayout {
+                                    padding-left: 8px * row.depth;
+                                    padding-right: 4px;
+                                    spacing: 4px;
+                                    Text { text: row.online ? "🟢 " : (row.is_root ? "📁 " : "🔴 "); font-size: 12px; }
+                                    Text { text: row.label; vertical-alignment: center; }
+                                }
+                                TouchArea {
+                                    clicked => { root.tree_clicked(idx); }
+                                    double-clicked => { root.tree_double_clicked(idx); }
+                                }
+                            }
+                        }
+                    }
+                    Rectangle { height: 1px; background: #d0d0d0; }
+                    VerticalLayout {
+                        spacing: 2px;
+                        Button { text: "➕ Add device"; enabled: AppState.selected_level <= 0 && !AppState.busy; clicked => { AppState.action_add_device = true; } }
+                        Button { text: "🔑 Login"; enabled: AppState.selected_level == 1 && !AppState.busy; clicked => { AppState.action_login = true; } }
+                        Button { text: "🔒 Logout"; enabled: AppState.selected_level == 1 && !AppState.busy; clicked => { AppState.action_logout = true; } }
+                        Button { text: "🗑 Delete"; enabled: AppState.selected_level == 1 && !AppState.busy; clicked => { AppState.action_delete = true; } }
+                        Button { text: "⚙ Device"; enabled: AppState.selected_level == 1 && !AppState.busy; clicked => { AppState.action_device_attr = true; } }
+                        Button { text: "📷 Channel"; enabled: AppState.selected_level == 2 && !AppState.busy; clicked => { AppState.action_channel_attr = true; } }
+                    }
+                }
+            }
+
+            // Content area
+            Rectangle {
+                width: 851px;
+                height: 651px;
+                background: #ffffff;
+                border-color: #d0d0d0;
+                border-width: 1px;
+                if AppState.current_page == 1: RealPlayPage {
+                    frame: AppState.preview_frame;
+                    playing: AppState.preview_active;
+                    channel: AppState.preview_channel;
+                    start(ch, stream, proto) => { root.realplay_start(ch, stream, proto); }
+                    stop => { root.realplay_stop(); }
+                    snapshot => { root.realplay_snapshot(); }
+                    ptz(c) => { root.ptz(c); }
+                }
+                if AppState.current_page == 2: PlayBackPage {}
+                if AppState.current_page == 3: ConfigurePage {}
+                if AppState.current_page == 4: ManagePage {}
+                if AppState.current_page == 5: OtherPage {}
+            }
+        }
+
+        LogAlarmPanel { logs: AppState.logs; alarms: AppState.alarms; }
+    }
+}
