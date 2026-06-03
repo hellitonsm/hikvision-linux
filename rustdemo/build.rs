@@ -6,6 +6,7 @@ fn main() {
     let workspace_root = manifest_dir.parent().unwrap();
 
     let lib_search_dirs = [
+        manifest_dir.join("lib"),
         workspace_root.join("Linux64").join("lib"),
         workspace_root.join("Linux32").join("lib"),
         workspace_root.join("win32").join("lib"),

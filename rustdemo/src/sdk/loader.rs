@@ -34,6 +34,7 @@ fn sdk_search_dirs() -> Vec<PathBuf> {
     // Relative to the workspace (newqtdemo/) — same layout the Qt demo uses.
     if let Ok(cwd) = std::env::current_dir() {
         for rel in &[
+            "lib",
             "Linux64/lib",
             "Linux32/lib",
             "../Linux64/lib",
