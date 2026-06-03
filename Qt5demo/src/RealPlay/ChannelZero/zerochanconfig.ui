@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ZeroChanConfigClass</class>
+ <widget class="QDialog" name="ZeroChanConfigClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>340</width>
+    <height>220</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Channel Zero Configuration</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QCheckBox" name="checkBox_enable">
+     <property name="text">
+      <string>Enable Channel Zero</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_bitrate">
+       <property name="text">
+        <string>Bitrate:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="comboBox_bitrate">
+       <item><property name="text"><string>32K</string></property></item>
+       <item><property name="text"><string>48K</string></property></item>
+       <item><property name="text"><string>64K</string></property></item>
+       <item><property name="text"><string>80K</string></property></item>
+       <item><property name="text"><string>96K</string></property></item>
+       <item><property name="text"><string>128K</string></property></item>
+       <item><property name="text"><string>160K</string></property></item>
+       <item><property name="text"><string>192K</string></property></item>
+       <item><property name="text"><string>224K</string></property></item>
+       <item><property name="text"><string>256K</string></property></item>
+       <item><property name="text"><string>320K</string></property></item>
+       <item><property name="text"><string>384K</string></property></item>
+       <item><property name="text"><string>448K</string></property></item>
+       <item><property name="text"><string>512K</string></property></item>
+       <item><property name="text"><string>640K</string></property></item>
+       <item><property name="text"><string>768K</string></property></item>
+       <item><property name="text"><string>896K</string></property></item>
+       <item><property name="text"><string>1024K</string></property></item>
+       <item><property name="text"><string>1280K</string></property></item>
+       <item><property name="text"><string>1536K</string></property></item>
+       <item><property name="text"><string>1792K</string></property></item>
+       <item><property name="text"><string>2048K</string></property></item>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_framerate">
+       <property name="text">
+        <string>Frame Rate:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="comboBox_framerate">
+       <item><property name="text"><string>Full</string></property></item>
+       <item><property name="text"><string>1/16</string></property></item>
+       <item><property name="text"><string>1/8</string></property></item>
+       <item><property name="text"><string>1/4</string></property></item>
+       <item><property name="text"><string>1/2</string></property></item>
+       <item><property name="text"><string>1 fps</string></property></item>
+       <item><property name="text"><string>2 fps</string></property></item>
+       <item><property name="text"><string>4 fps</string></property></item>
+       <item><property name="text"><string>6 fps</string></property></item>
+       <item><property name="text"><string>8 fps</string></property></item>
+       <item><property name="text"><string>10 fps</string></property></item>
+       <item><property name="text"><string>12 fps</string></property></item>
+       <item><property name="text"><string>16 fps</string></property></item>
+       <item><property name="text"><string>20 fps</string></property></item>
+       <item><property name="text"><string>15 fps</string></property></item>
+       <item><property name="text"><string>18 fps</string></property></item>
+       <item><property name="text"><string>22 fps</string></property></item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="pushButton_get">
+       <property name="text">
+        <string>Get</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_set">
+       <property name="text">
+        <string>Set</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_cancel">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
