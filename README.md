@@ -146,17 +146,83 @@ make
 ./getpsdata
 ```
 
-## SDK Libraries
+## Download da SDK
 
-As bibliotecas em `lib/` devem estar acessíveis em tempo de execução. Opções:
+A SDK pode ser baixada diretamente do site oficial da Hikvision:
 
-1. Copiar para o diretório do executável
-2. `export LD_LIBRARY_PATH=/caminho/lib:/caminho/lib/HCNetSDKCom`
-3. Adicionar ao `/etc/ld.so.conf` e rodar `ldconfig`
-4. Usar `-Wl,-rpath` na linkagem
+- **Site global:** https://www.hikvision.com/en/support/download/sdk/
+- **Site EUA:** https://www.hikvision.com/us-en/support/download/sdk/
+- **Oriente Médio/África:** https://www.hikvision.com/mena-en/support/download/sdk/
+
+Na página, procure por **"Device Network SDK (for Linux 64-bit)"**. A versão mais recente disponível é a **V6.1.9.4_build20220412** (abril/2022). O repositório já inclui a versão **V6.1.7.x**.
+
+O pacote oficial contém:
+- `libhcnetsdk.so` e demais bibliotecas
+- `HCNetSDKCom/` — plugins da SDK
+- `HCNetSDK.h` e headers auxiliares
+- Documentação em PDF/CHM
+- Demos oficiais em C++ (Qt4) e Java
+
+## Configuração da SDK
+
+### Opção 1: Usar as bibliotecas deste repositório
 
 ```bash
+# A partir da raiz do projeto
 export LD_LIBRARY_PATH=$PWD/lib:$PWD/lib/HCNetSDKCom
+```
+
+### Opção 2: Instalação global no sistema
+
+```bash
+# Copiar bibliotecas para /usr/local/lib
+sudo cp lib/*.so /usr/local/lib/
+sudo cp -r lib/HCNetSDKCom /usr/local/lib/
+sudo ldconfig
+
+# Copiar headers para /usr/local/include
+sudo cp incEn/*.h /usr/local/include/
+```
+
+### Opção 3: Copiar para o diretório de cada demo
+
+```bash
+# Exemplo com consoleDemo
+cp -r lib/*.so lib/HCNetSDKCom consoleDemo/linux64/lib/
+```
+
+### Opção 4: Via CMake (para projetos próprios)
+
+```cmake
+# CMakeLists.txt
+include_directories(/caminho/para/hikvision-linux/incEn)
+link_directories(/caminho/para/hikvision-linux/lib)
+target_link_libraries(meu_projeto PRIVATE hcnetsdk pthread)
+```
+
+Execute com:
+```bash
+export LD_LIBRARY_PATH=/caminho/para/hikvision-linux/lib:/caminho/para/hikvision-linux/lib/HCNetSDKCom
+./meu_projeto
+```
+
+### Opção 5: LD_LIBRARY_PATH persistente
+
+Adicione ao `~/.bashrc`:
+```bash
+echo 'export LD_LIBRARY_PATH=/caminho/para/hikvision-linux/lib:/caminho/para/hikvision-linux/lib/HCNetSDKCom:$LD_LIBRARY_PATH' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### Verificação
+
+Para confirmar que a SDK está acessível:
+```bash
+ldd lib/libhcnetsdk.so | grep "not found"
+# Nenhuma saída = todas as dependências resolvidas
+
+# Testar carregamento
+LD_LIBRARY_PATH=lib:lib/HCNetSDKCom ldd consoleDemo/linux64/lib/sdkTest | grep "not found"
 ```
 
 ## Compatibilidade
