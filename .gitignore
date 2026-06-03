@@ -9,6 +9,7 @@
 **/*.exe
 **/*.dll
 **/*.so
+**/*.so.1
 **/*.a
 **/*.lib
 **/*.dylib
@@ -18,6 +19,7 @@
 **/*.jar
 **/*.war
 **/*.dex
+**/*.zip
 **/lib/*.so
 **/lib/*.a
 **/Linux64/*.so
@@ -70,6 +72,9 @@ __pycache__/
 **/getpsdata
 **/sdkTest
 **/QtClientDemo
+
+# Documentation (download separately from Hikvision)
+doc/
 
 # Misc
 *.txt
