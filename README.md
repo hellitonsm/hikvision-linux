@@ -32,6 +32,7 @@ hikvision-linux/
 ├── QtDemo/              # Demo C++ Qt4 (GUI completa)
 ├── Qt5demo/             # Demo C++ Qt5
 ├── rustdemo/            # Demo Rust + Slint
+├── eguirust/            # Demo Rust + egui (UI imediata)
 ├── LinuxJavaDemo/       # Demo Java + Swing + JNA
 └── psdatacall_demo/     # Captura de stream PS (C++ mínimo)
 ```
@@ -44,6 +45,7 @@ hikvision-linux/
 | Qt5demo | C++ | Qt5 | qmake / QtCreator | Completa (port Qt5) |
 | consoleDemo | C++ | Terminal | make | Completa |
 | **rustdemo** | **Rust** | **Slint** | **cargo build** | **Funcional** (alguns módulos em esqueleto) |
+| **eguirust** | **Rust** | **egui** | **cargo build** | **Funcional** (playback, streams, snapshots, X11 multi-window) |
 | LinuxJavaDemo | Java | Swing | ant / run.sh | Completa |
 | psdatacall_demo | C++ | N/A | make | Mínima (captura PS) |
 
@@ -101,6 +103,37 @@ cargo build
 ```
 
 Requer Rust 1.75+ e as `.so` em `Linux64/lib/`.
+
+### eguirust (Rust + egui)
+
+Port da SDK em Rust com [egui](https://github.com/emilk/egui) (modo imediato), focada em interação direta com múltiplas câmeras. Utiliza sua própria camada FFI e processamento de streams.
+
+**Módulos:**
+
+| Módulo | Descrição |
+|--------|-----------|
+| `hcnetsdk.rs` | FFI e funções principais da SDK |
+| `hcnetsdk_stream.rs` | Stream principal (preview/realplay) |
+| `hcnetsdk_multi_stream.rs` | Multi-stream (múltiplas câmeras) |
+| `hcnetsdk_x11_multi.rs` | Janelas X11 para cada stream |
+| `playctrl.rs` | Controle de playback |
+| `playctrl_stream.rs` | Processamento de stream de playback |
+| `encrypted_stream.rs` | Suporte a stream criptografado |
+| `netstream.rs` | Stream via rede |
+| `rtsp.rs` | Protocolo RTSP |
+| `snapshot_stream.rs` | Captura de snapshots |
+| `x11_embed.rs` | Embedding X11 |
+| `x11_window.rs` | Gerenciamento de janelas X11 |
+| `api.rs` | API de alto nível (login, callbacks, alarmes) |
+
+**Build:**
+```bash
+cd eguirust
+cargo build --release
+./run.sh
+```
+
+Requer Rust 1.75+, as `.so` da SDK em `lib/` e um servidor X11.
 
 ### consoleDemo
 
@@ -242,7 +275,7 @@ LD_LIBRARY_PATH=lib:lib/HCNetSDKCom ldd consoleDemo/linux64/lib/sdkTest | grep "
 - **C++:** g++ (C++11), make
 - **Qt4:** Qt 4.7+, libqt4-dev
 - **Qt5:** Qt 5.12+, qtbase5-dev, libqt5widgets5
-- **Rust:** Rust 1.75+, cargo
+- **Rust:** Rust 1.75+, cargo (Slint ou egui como UI)
 - **Java:** JDK 8, Apache Ant (opcional)
 
 ### Estrutura de dados do dispositivo

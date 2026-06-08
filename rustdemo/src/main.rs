@@ -54,12 +54,12 @@ fn main() {
         }
         check_action_flags(&ui, &t_data, &t_add, &t_dev, &t_chan, sdk_ok);
 
-        // Poll X11 events on the preview window (handles WM close).
+        // Poll X11 events on all preview windows (handles WM close for each).
         t_rp.borrow_mut().poll_window_events();
 
-        // Sync preview state
+        // Sync preview state — any active session means preview is active
         let rp_b = t_rp.borrow();
-        let active = rp_b.preview_active;
+        let active = rp_b.preview_active();
         drop(rp_b);
         if AppState::get(&ui).get_preview_active() != active {
             AppState::get(&ui).set_preview_active(active);
@@ -91,7 +91,8 @@ fn main() {
         else if l == 2 {
             let ch = activate_channel(&ui, &d_data, di, ci, sdk_ok);
             let uid = AppState::get(&ui).get_current_user_id();
-            if uid > 0 && ch > 0 {
+            // uid > 0 (logged in) and ch >= 0 (channel 0 = Zero Channel is valid)
+            if uid > 0 && ch >= 0 {
                 AppState::get(&ui).set_current_page(1);
                 let mut r = d_rp.borrow_mut();
                 if let Err(e) = r.start(uid, ch, 0, 0) {
@@ -134,6 +135,10 @@ fn main() {
         if sdk_ok {
     match sdk::login(&dev.ip, dev.effective_port(), dev.effective_user(), &dev.password, &dev.secret_key) {
                 Ok((uid, info)) => {
+                    // Canal Zero (channel 0) — se o dispositivo suporta
+                    if info.by_zero_chan_num > 0 {
+                        dev.channels.push(ChannelData { name: "ZeroChannel".to_string(), number: 0, ..Default::default() });
+                    }
                     for i in 0..info.by_chan_num as i32 {
                         dev.channels.push(ChannelData { name: format!("Camera{}", info.by_start_chan as i32 + i), number: info.by_start_chan as i32 + i, ..Default::default() });
                     }
@@ -203,8 +208,8 @@ fn main() {
     });
     let rp_t = rp.clone(); let rp_t_data = data.clone();
     ui.on_realplay_stop(move || {
-        rp_t.borrow_mut().stop();
-        rp_t_data.borrow_mut().log.add_log(LogEntry::success("RealPlay", "—", "stop"));
+        rp_t.borrow_mut().stop_all();
+        rp_t_data.borrow_mut().log.add_log(LogEntry::success("RealPlay", "—", "stop all"));
     });
     ui.on_realplay_snapshot(move || {
         log::info!("Snapshot requested (not yet implemented)");
